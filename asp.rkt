@@ -1,7 +1,7 @@
 #lang racket
 
 (require "utils.rkt")
-(provide (all-defined-out))
+(provide (all-defined-out) (all-from-out "utils.rkt"))
 
 ; Signature: attach-tag(x, tag)
 ; Type: [LIST*Symbol -> LIST]

@@ -1,6 +1,6 @@
 #lang racket
 
-(require "env-ds.rkt" "../asp.rkt" "../utils.rkt")
+(require "env-ds.rkt" "../asp.rkt")
 (provide (all-defined-out))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
