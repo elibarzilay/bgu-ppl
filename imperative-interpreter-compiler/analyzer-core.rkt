@@ -94,10 +94,10 @@
   (let ((procs (map analyze exps))
         (last-in-list (lambda (lst) (car (reverse lst)))))
     (if (null? procs)
-        (error "Empty sequence -- ANALYZE"))
-    (lambda (env)
-      (let ((vals (map (lambda (proc)(proc env)) procs)))
-        (last-in-list vals)))))
+        (error "Empty sequence -- ANALYZE")
+        (lambda (env)
+          (let ((vals (map (lambda (proc)(proc env)) procs)))
+            (last-in-list vals))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Application handling
@@ -117,7 +117,7 @@
          (let ((parameters (procedure-parameters procedure)))
            (if (make-frame-precondition parameters arguments)
                ((procedure-body procedure)
-                (extend-env (make-frame parameters arguments)
+                (extend-env (make-frame parameters (map box arguments))
                             (procedure-environment procedure)))
                (error 
                 "make-frame-precondition violation: # of variables does not match # of values while attempting to create a frame"))))

@@ -1,6 +1,6 @@
 #lang racket
 
-(require "env-ds.rkt")
+(require "../asp.rkt" "env-ds.rkt")
 (provide (all-defined-out))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -107,7 +107,7 @@
                  (eval-sequence
                   (procedure-body procedure)
                   (extend-env
-                   (make-frame parameters arguments)
+                   (make-frame parameters (map box arguments))
                    (procedure-environment procedure)))
                  (error 
                   "make-frame-precondition violation: # of variables does not match # of values while attempting to create a frame"))))

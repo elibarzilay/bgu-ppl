@@ -61,10 +61,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Post-conditions: produces a pair of <variables,values> or error if (#vars != #vals)
-(define (make-frame variables values)
+(define (make-frame variables boxed-values)
   (box (if (null? variables)
            (list)
-           (cons variables values))))
+           (cons variables boxed-values))))
 
 (define (make-frame-precondition vars vals)
   (= (length vars) (length vals)))
@@ -72,43 +72,35 @@
 (define (frame-variables frame) (car (unbox frame)))
 (define (frame-values frame) (cdr (unbox frame)))
 (define (first-var-in-frame frame) (car (frame-variables frame)))
-(define (first-val-in-frame frame) (car (frame-values frame)))
+(define (first-boxed-val-in-frame frame) (car (frame-values frame)))
 (define (rest-vars-in-frame frame) (cdr (frame-variables frame)))
-(define (rest-vals-in-frame frame) (cdr (frame-values frame)))
+(define (rest-boxed-vals-in-frame frame) (cdr (frame-values frame)))
 (define (empty-frame? frame) (null? (unbox frame)))
 
 (define (add-binding-to-frame! binding frame)
   (let ((var (binding-variable binding))
         (val (binding-value binding)))
     (set-box! frame (cons (cons var (frame-variables frame))
-                          (cons val (frame-values frame))))))
-
-; If var was found in the frame, it is replaced, otherwise an error is thrown
-(define (set-binding-in-frame! var val frame)
-  (letrec ((get-sub-frame (lambda (var frame)
-                            (if (eq? var (first-var-in-frame frame))
-                                frame
-                                (get-sub-frame var (make-frame (rest-vars-in-frame frame) 
-                                                               (rest-vals-in-frame frame))))))
-           (set-frame-first-value! (lambda (frame value)
-                                     (let ((vals (frame-values frame)))
-                                       (set-car! vals value)))))
-    (if (empty-frame? (lookup-variable-value-in-frame var frame))
-        (error "The variable ,var was not found in the frame" frame)
-        (set-frame-first-value! (get-sub-frame var frame) val))))
+                          (cons (box val) (frame-values frame))))))
 
 (define (lookup-variable-value-in-frame var frame) 
   (cond ((or (empty-frame? frame)
              (eq? var (first-var-in-frame frame))) frame) 
         (else (lookup-variable-value-in-frame var (make-frame (rest-vars-in-frame frame)
-                                                              (rest-vals-in-frame frame))))))
+                                                              (rest-boxed-vals-in-frame frame))))))
 
-(define set-binding-in-env! 
-  (lambda (var val env)
-    (let ((f (defined-in-env var env)))
-      (if (empty-frame? f)
-          (error "Variable not declared -- SET-BINDING" var env)
-          (set-binding-in-frame! var val f)))))
+(define (lookup-variable-boxed-value var env)
+  (let ((f (defined-in-env var env)))
+    (if (empty-frame? f)
+        (begin
+          (display var)(newline)
+          (display env)(newline)
+          (error "Variable not found -- LOOKUP")
+          )
+        (first-boxed-val-in-frame f))))
+
+(define (set-binding-in-env! var val env)
+  (set-box! (lookup-variable-boxed-value var env) val))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Bindings 
@@ -145,15 +137,8 @@
             (defined-in-env var (enclosing-env env))
             f))))
 
-(define (lookup-variable-value var env) 
-  (let ((f (defined-in-env var env)))
-    (if (empty-frame? f)
-        (begin
-          (display var)(newline)
-          (display env)(newline)
-          (error "Variable not found -- LOOKUP")
-          )
-        (first-val-in-frame f))))
+(define (lookup-variable-value var env)
+  (unbox (lookup-variable-boxed-value var env)))
 
 (define (add-binding! binding)
   (add-binding-to-frame! binding (first-frame the-global-environment)))
@@ -165,7 +150,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; The global environment ADT
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(define the-global-environment
+(define the-global-environment 
   (let ((primitive-procedures
          (list (list 'car car)
                (list 'cdr cdr)
@@ -181,6 +166,6 @@
                (list 'list list)
                )))
     (extend-env (make-frame (map car primitive-procedures)
-                            (map (lambda (x) (make-primitive-procedure (cadr x))) 
+                            (map (lambda (x) (box (make-primitive-procedure (cadr x)))) 
                                  primitive-procedures))
                 the-empty-environment)))
