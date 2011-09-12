@@ -47,14 +47,6 @@
   (lambda (exp)
     (or (number? exp) (boolean? exp) (variable? exp) (null? exp))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Number
-(define number? number?)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Null
-(define null? null?)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  
 ;;; quote:
 (define quoted? 
