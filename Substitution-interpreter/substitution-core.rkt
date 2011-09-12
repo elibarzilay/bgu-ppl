@@ -1,5 +1,5 @@
-(load "ASP.scm")
-(load "ge-adt.scm")
+(load "ASP.rkt")
+(load "ge-adt.rkt")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;  SUBSTITUTION-EVALUATOR  ;;;;;;;;;;;;;;;

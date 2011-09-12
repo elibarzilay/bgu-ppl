@@ -1,6 +1,6 @@
-(load "ASP.scm")
-(load "env DS.scm")
-(load "utils.scm")
+(load "ASP.rkt")
+(load "env DS.rkt")
+(load "utils.rkt")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;  FUNC-ENV-EVALUATOR  ;;;;;;;;;;;;;;;;;

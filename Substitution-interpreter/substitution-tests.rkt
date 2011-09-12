@@ -1,4 +1,4 @@
-(load "substitution-core.scm")
+(load "substitution-core.rkt")
 
 (define test
   (lambda (test-lst)

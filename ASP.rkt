@@ -1,4 +1,4 @@
-(load "utils.scm")
+(load "utils.rkt")
 
 ; Signature: attach-tag(x, tag)
 ; Type: [LIST*Symbol -> LIST]

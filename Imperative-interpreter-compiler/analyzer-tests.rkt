@@ -1,4 +1,4 @@
-(load "imperative-analyzer-core.scm")
+(load "imperative-analyzer-core.rkt")
 
 (define test
   (lambda (test-lst)

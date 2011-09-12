@@ -1,4 +1,4 @@
-(load "analyzer-core.scm")
+(load "analyzer-core.rkt")
 
 (define test
   (lambda (test-lst)
