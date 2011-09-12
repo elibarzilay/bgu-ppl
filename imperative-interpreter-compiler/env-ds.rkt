@@ -62,26 +62,26 @@
 
 ; Post-conditions: produces a pair of <variables,values> or error if (#vars != #vals)
 (define (make-frame variables values)
-  (if (null? variables)
-      (list)
-      (cons variables values)))
+  (box (if (null? variables)
+           (list)
+           (cons variables values))))
 
 (define (make-frame-precondition vars vals)
   (= (length vars) (length vals)))
 
-(define (frame-variables frame) (car frame))
-(define (frame-values frame) (cdr frame))
+(define (frame-variables frame) (car (unbox frame)))
+(define (frame-values frame) (cdr (unbox frame)))
 (define (first-var-in-frame frame) (car (frame-variables frame)))
 (define (first-val-in-frame frame) (car (frame-values frame)))
 (define (rest-vars-in-frame frame) (cdr (frame-variables frame)))
 (define (rest-vals-in-frame frame) (cdr (frame-values frame)))
-(define empty-frame? null?)
+(define (empty-frame? frame) (null? (unbox frame)))
 
 (define (add-binding-to-frame! binding frame)
   (let ((var (binding-variable binding))
         (val (binding-value binding)))
-    (set-car! frame (cons var (car frame)))
-    (set-cdr! frame (cons val (cdr frame)))))
+    (set-box! frame (cons (cons var (frame-variables frame))
+                          (cons val (frame-values frame))))))
 
 ; If var was found in the frame, it is replaced, otherwise an error is thrown
 (define (set-binding-in-frame! var val frame)
@@ -155,10 +155,8 @@
           )
         (first-val-in-frame f))))
 
-(define add-binding! 
-  (lambda (binding)
-    (add-binding-to-frame! binding 
-                           (first-frame the-global-environment))))
+(define (add-binding! binding)
+  (add-binding-to-frame! binding (first-frame the-global-environment)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;  Global environment construction  ;;;;;;;;;;;
@@ -167,7 +165,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; The global environment ADT
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (define the-global-environment
   (let ((primitive-procedures
          (list (list 'car car)
