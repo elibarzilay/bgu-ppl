@@ -1,16 +1,16 @@
-(load "env DS.rkt")
-(load "ASP.rkt")
+(load "env-ds.rkt")
+(load "asp.rkt")
 (load "utils.rkt")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;  IMP-ENV-ANALYZER  ;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;  FUNC-ENV-ANALYZER  ;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (derive-analyze-eval exp)
   ((analyze (derive exp)) the-global-environment))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Main imperative-environment-analyzer
+; Main functional-environment-analyzer
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; Type: <EXP>  --> (ENV --> VAL) (union of Number, Symbol, Boolean, Procedure, Pair, List)
@@ -36,13 +36,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (special-form? exp)
-  (or (quoted? exp) (lambda? exp) (assignment? exp)
+  (or (quoted? exp) (lambda? exp) 
       (definition? exp) (if? exp) (begin? exp) ))
 
 (define (analyze-special-form exp)
   (cond ((quoted? exp) (analyze-quoted exp))
         ((lambda? exp) (analyze-lambda exp))
-        ((assignment? exp) (analyze-assignment exp))
         ((definition? exp) (analyze-definition exp))
         ((if? exp) (analyze-if exp))
         ((begin? exp) (analyze-begin exp))
@@ -58,13 +57,6 @@
         (body (analyze-sequence (lambda-body exp))))
     (lambda (env)
       (make-procedure parameters body env))))
-
-(define (analyze-assignment exp)
-  (let ((var (assignment-variable exp))
-        (val (analyze (assignment-value exp))))
-    (lambda (env)
-      (set-binding-in-env! var (val env) env)
-      'ok)))
 
 (define (analyze-definition exp)
   (let ((var (definition-variable exp))
@@ -112,7 +104,7 @@
 (define (apply-procedure procedure arguments) 
   (cond ((primitive-procedure? procedure)
          (apply-primitive-procedure procedure arguments))
-        ((compound-procedure? procedure)
+        ((compound-procedure? procedure) 
          (let ((parameters (procedure-parameters procedure)))
            (if (make-frame-precondition parameters arguments)
                ((procedure-body procedure)
@@ -123,6 +115,7 @@
         (else
          (error
           "Unknown procedure type -- APPLY" procedure))))
+
 
 ;;; The primitive procedures will be captured as data structures of
 ;;; the evaluator. Therefore, their implementation should be
@@ -135,4 +128,3 @@
 
 (define (false? x)
   (eq? x #f))
-

@@ -1,23 +1,21 @@
-(load "ASP.rkt")
-(load "env DS.rkt")
-(load "utils.rkt")
+(load "env-ds.rkt")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;  FUNC-ENV-EVALUATOR  ;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;  IMP-ENV-EVALUATOR  ;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define derive-eval
+(define derive-eval 
   (lambda (exp)
     (env-eval (derive exp) the-global-environment)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Main functional-environment-evaluation
+; Main imperative-environment-evaluation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; Type: <EXP> * ENV --> VAL (union of Number, Symbol, Boolean, Procedure, Pair, List)
 ;;; Pre-conditions: The given expression is legal according to the concrete syntax, Inner 'define' expressions are not legal.
 (define env-eval
-  (lambda (exp env)                                  
+  (lambda (exp env)
     (cond ((atomic? exp) (eval-atomic exp env))
           ((special-form? exp) (eval-special-form exp env))
           ((application? exp)
@@ -42,13 +40,14 @@
 
 (define special-form? 
   (lambda (exp)
-    (or (quoted? exp) (lambda? exp) (definition? exp) 
-        (if? exp) (begin? exp) )))
+    (or (quoted? exp) (lambda? exp) (assignment? exp)
+        (definition? exp) (if? exp) (begin? exp) )))
 
-(define eval-special-form 
+(define eval-special-form
   (lambda (exp env)
     (cond ((quoted? exp) (text-of-quotation exp))
           ((lambda? exp) (eval-lambda exp env))
+          ((assignment? exp) (eval-assignment exp env))
           ((definition? exp) 
            (if (not (eq? env the-global-environment))
                (error "Non global definition" exp)
@@ -63,13 +62,20 @@
                     (lambda-body exp)
                     env)))
 
-(define eval-definition 
+(define eval-assignment 
+  (lambda (exp env) 
+    (set-binding-in-env! (assignment-variable exp)
+                         (env-eval (assignment-value exp) env)
+                         env)
+    'ok))
+
+(define eval-definition
   (lambda (exp) 
     (add-binding! (make-binding (definition-variable exp)
                                 (env-eval (definition-value exp) the-global-environment)))
     'ok))
 
-(define eval-if
+(define eval-if 
   (lambda (exp env)
     (if (true? (env-eval (if-predicate exp) env))
         (env-eval (if-consequent exp) env)
@@ -79,7 +85,7 @@
   (lambda (exp env)
     (eval-sequence (begin-actions exp) env)))
 
-(define eval-sequence 
+(define eval-sequence
   (lambda (exps env)
     (cond ((sequence-last-exp? exps) (env-eval (sequence-first-exp exps) env))
           (else (env-eval (sequence-first-exp exps) env)
@@ -88,8 +94,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Application handling
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(define apply-procedure 
+(define apply-procedure
   (lambda (procedure arguments)
     (cond ((primitive-procedure? procedure)
            (apply-primitive-procedure procedure arguments))
@@ -117,7 +122,7 @@
 ;;; The primitive procedures will be captured as data structures of
 ;;; the evaluator. Therefore, their implementation should be
 ;;; retrieved from these objects.
-(define apply-primitive-procedure 
+(define apply-primitive-procedure
   (lambda (proc args)
     (apply (primitive-implementation proc) args)))
 
@@ -128,4 +133,3 @@
 (define false? 
   (lambda (x)
     (eq? x #f)))
-
