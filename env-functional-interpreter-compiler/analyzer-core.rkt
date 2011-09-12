@@ -14,7 +14,7 @@
 ; Main functional-environment-analyzer
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; Type: <EXP>  --> (ENV --> VAL) (union of Number, Symbol, Boolean, Procedure, Pair, List)
+;;; Type: <EXP> -> (ENV -> VAL) (union of Number, Symbol, Boolean, Procedure, Pair, List)
 ;;; Pre-conditions: The given expression is legal according to the concrete syntax, Inner 'define' expressions are not legal.
 (define (analyze exp)
     (cond ((atomic? exp) (analyze-atomic exp))
@@ -37,8 +37,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (special-form? exp)
-  (or (quoted? exp) (lambda? exp) 
-      (definition? exp) (if? exp) (begin? exp) ))
+  (or (quoted? exp) (lambda? exp)
+      (definition? exp) (if? exp) (begin? exp)))
 
 (define (analyze-special-form exp)
   (cond ((quoted? exp) (analyze-quoted exp))
@@ -88,30 +88,30 @@
     (if (null? procs)
         (error "Empty sequence -- ANALYZE")
         (lambda (env)
-          (let ((vals (map (lambda (proc)(proc env)) procs)))
+          (let ((vals (map (lambda (proc) (proc env)) procs)))
             (last-in-list vals))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Application handling
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define (analyze-application exp) 
+(define (analyze-application exp)
   (let ((application-operator (analyze (operator exp)))
         (application-operands (map analyze (operands exp))))
     (lambda (env)
       (apply-procedure (application-operator env)
                        (map (lambda (operand) (operand env)) application-operands)))))
 
-(define (apply-procedure procedure arguments) 
+(define (apply-procedure procedure arguments)
   (cond ((primitive-procedure? procedure)
          (apply-primitive-procedure procedure arguments))
-        ((compound-procedure? procedure) 
+        ((compound-procedure? procedure)
          (let ((parameters (procedure-parameters procedure)))
            (if (make-frame-precondition parameters arguments)
                ((procedure-body procedure)
                 (extend-env (make-frame parameters arguments)
                             (procedure-environment procedure)))
-               (error 
+               (error
                 "make-frame-precondition violation: # of variables does not match # of values while attempting to create a frame"))))
         (else
          (error

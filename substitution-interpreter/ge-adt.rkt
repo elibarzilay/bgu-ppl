@@ -9,8 +9,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Symbol:
-(define make-symbol 
-  (lambda (x) (attach-tag (list x) 'symbol )))
+(define make-symbol
+  (lambda (x) (attach-tag (list x) 'symbol)))
 (define evaluator-symbol?
   (lambda (s) (tagged-list? s 'symbol)))
 (define symbol-content
@@ -23,40 +23,40 @@
 (define evaluator-list?
   (lambda (s) (tagged-list? s 'evaluator-list)))
 (define list-content
-  (lambda (s) (car (get-content s)))) 
+  (lambda (s) (car (get-content s))))
 
 ;;; Primitive procedure:
-(define make-primitive-procedure 
+(define make-primitive-procedure
   (lambda (proc)
     (attach-tag (list proc) 'primitive)))
 
-(define primitive-implementation 
-  (lambda (proc) 
+(define primitive-implementation
+  (lambda (proc)
     (car (get-content proc))))
 
-(define primitive-procedure? 
+(define primitive-procedure?
   (lambda (proc)
     (tagged-list? proc 'primitive)))
 
 ;;;; Closure:
-(define make-procedure 
+(define make-procedure
   (lambda (parameters body)
     (attach-tag (cons parameters body) 'procedure)))
 
-(define compound-procedure? 
+(define compound-procedure?
   (lambda (p)
     (tagged-list? p 'procedure)))
 
-(define procedure-parameters 
-  (lambda (p) 
+(define procedure-parameters
+  (lambda (p)
     (car (get-content p))))
 
-(define procedure-body 
-  (lambda (p) 
+(define procedure-body
+  (lambda (p)
     (cdr (get-content p))))
 
 ; An identification predicate for procedures -- closures and primitive:
-(define evaluator-procedure? 
+(define evaluator-procedure?
   (lambda (p)
     (or (primitive-procedure? p) (compound-procedure? p))))
 
@@ -66,7 +66,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;; Construction;;;;;;;;;;;;;
-(define make-the-global-environment 
+(define make-the-global-environment
   (lambda ()
     (let ((primitive-procedures
            (list (list 'car car)
@@ -91,9 +91,9 @@
 (define the-global-environment (make-the-global-environment))
 
 
-;;;;;;;;;;; selection: 
+;;;;;;;;;;; selection:
 
-(define lookup-variable-value 
+(define lookup-variable-value
   (lambda (var)
     (letrec ((frame-variables (lambda (frame) (car frame)))
              (frame-values (lambda (frame) (cdr frame)))
@@ -115,7 +115,7 @@
 
 ;;;;;;;;;;;;; Mutation:
 
-(define add-binding! 
+(define add-binding!
   (lambda (binding)
     (let ((var (binding-variable binding))
           (val (binding-value binding))
@@ -129,11 +129,11 @@
   (lambda (var val)
     (cons var val)))
 
-(define binding-variable 
+(define binding-variable
   (lambda (binding)
     (car binding)))
 
-(define binding-value 
+(define binding-value
   (lambda (binding)
     (cdr binding)))
 
@@ -142,4 +142,3 @@
 (define prim-car (make-primitive-procedure car))
 (define proc (make-procedure '(x) '(+ x y)))
 (define elist (make-list '(1 2 3)))
-

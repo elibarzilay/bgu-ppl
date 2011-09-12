@@ -10,7 +10,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Procedure representation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;Type: [T --> PAIR(Symbol,T)]
+;Type: [T -> PAIR(Symbol,T)]
 (define make-primitive-procedure
   (lambda (proc)
     (attach-tag (list proc) 'primitive)))
@@ -57,7 +57,7 @@
     (or (primitive-procedure? p) (compound-procedure? p))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Frames 
+; Frames
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Post-conditions: produces a pair of <variables,values> or error if (#vars != #vals)
@@ -83,9 +83,9 @@
     (set-box! frame (cons (cons var (frame-variables frame))
                           (cons (box val) (frame-values frame))))))
 
-(define (lookup-variable-value-in-frame var frame) 
+(define (lookup-variable-value-in-frame var frame)
   (cond ((or (empty-frame? frame)
-             (eq? var (first-var-in-frame frame))) frame) 
+             (eq? var (first-var-in-frame frame))) frame)
         (else (lookup-variable-value-in-frame var (make-frame (rest-vars-in-frame frame)
                                                               (rest-boxed-vals-in-frame frame))))))
 
@@ -93,17 +93,16 @@
   (let ((f (defined-in-env var env)))
     (if (empty-frame? f)
         (begin
-          (display var)(newline)
-          (display env)(newline)
-          (error "Variable not found -- LOOKUP")
-          )
+          (display var) (newline)
+          (display env) (newline)
+          (error "Variable not found -- LOOKUP"))
         (first-boxed-val-in-frame f))))
 
 (define (set-binding-in-env! var val env)
   (set-box! (lookup-variable-boxed-value var env) val))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Bindings 
+; Bindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (make-binding var val)
@@ -119,7 +118,7 @@
 ; Environment
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define (enclosing-env env) (cdr env)) 
+(define (enclosing-env env) (cdr env))
 (define (first-frame env) (car env))
 (define the-empty-environment '())
 (define (empty-env? env)
@@ -133,7 +132,7 @@
   (if (empty-env? env)
       env
       (let ((f (lookup-variable-value-in-frame var (first-frame env))))
-        (if (empty-frame? f)  
+        (if (empty-frame? f)
             (defined-in-env var (enclosing-env env))
             f))))
 
@@ -147,10 +146,10 @@
 ;;;;;;;;;;;  Global environment construction  ;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; The global environment ADT
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(define the-global-environment 
+;;;;;;;;;;;;;;;;;;;;;;;;
+; The global environment
+;;;;;;;;;;;;;;;;;;;;;;;;
+(define the-global-environment
   (let ((primitive-procedures
          (list (list 'car car)
                (list 'cdr cdr)
@@ -166,6 +165,6 @@
                (list 'list list)
                )))
     (extend-env (make-frame (map car primitive-procedures)
-                            (map (lambda (x) (box (make-primitive-procedure (cadr x)))) 
+                            (map (lambda (x) (box (make-primitive-procedure (cadr x))))
                                  primitive-procedures))
                 the-empty-environment)))

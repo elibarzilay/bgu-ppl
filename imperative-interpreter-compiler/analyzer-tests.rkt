@@ -34,11 +34,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (app-lambda-tests)
-  (let ((test-out (list '(((lambda(x) x) 12) 12)
-                        '(((lambda(x y z) (+ x y z)) 12 13 14) 39)
-                        '(((lambda(x) ((lambda (x) (+ x 1)) 2)) 12) 3)
-                        '(((lambda(f x y) (f x y)) + 12 4) 16)
-                        '(((lambda(f x y) (f x y)) ((lambda () +)) 12 4) 16)
+  (let ((test-out (list '(((lambda (x) x) 12) 12)
+                        '(((lambda (x y z) (+ x y z)) 12 13 14) 39)
+                        '(((lambda (x) ((lambda (x) (+ x 1)) 2)) 12) 3)
+                        '(((lambda (f x y) (f x y)) + 12 4) 16)
+                        '(((lambda (f x y) (f x y)) ((lambda () +)) 12 4) 16)
                         )))
     (test test-out)))
 
@@ -61,7 +61,7 @@
                         '((let ((x 1) (y 2)) (+ x y ((lambda (x) (* 2 x)) 10))) 23)
                         '((let ((x ((lambda () 5)))) x) 5)
                         '((let ((f (lambda (x) (+ x x)))) (f 4)) 8)
-                        '((let ((f (lambda (x) (+ x x))) (g (lambda (x y) (* x y))) (h (lambda() 2))) (f (g 3 (h)))) 12)
+                        '((let ((f (lambda (x) (+ x x))) (g (lambda (x y) (* x y))) (h (lambda () 2))) (f (g 3 (h)))) 12)
                         )))
     (test test-out)))
 
@@ -85,7 +85,7 @@
   (let ((test-out (list '((if (> 3 2) 5 1) 5)
                         '((if (< 3 2) 5 1) 1)
                         '((if (> (+ 1 2) 2) (+ 1 2 3) 1) 6)
-                        '((define (f n) (if (= n 0) 1 (* n (f (- n 1))))) ok) 
+                        '((define (f n) (if (= n 0) 1 (* n (f (- n 1))))) ok)
                         '((f 5) 120)
                         )))
     (test test-out)))
