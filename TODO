@@ -1,0 +1,20 @@
+Convert all uses of `error' to have a proper symbol indicator
+
+`display', `newline', `write' etc -> `printf'
+  Specifically, some are used before showing errors, which might lead to
+  confusing output since the display goes to stdout, and the error goes
+  to stderr
+
+Convert the (define foo (lambda (...) ...))s
+
+use structs
+
+Typo in error message:
+  (error "The variable ,var was not found in the frame" frame)
+
+Mess: `lookup-variable-value' and `defined-in-env' mess: why return a
+frame instead of the value??  (Also mess in using an empty env
+essentially as a flag for raising an exception later.)
+
+`get-sub-frame' in the imperative interpreter keeps building bogus
+frames that are boxes, but these boxes are not intended to be changed.
