@@ -84,9 +84,9 @@
                  (list 'append append)
                  ;;      more primitives
                  )))
-      (list (cons (map car primitive-procedures)
-                  (map (lambda (x) (make-primitive-procedure (cadr x)))
-                       primitive-procedures))))))
+      (list (box (cons (map car primitive-procedures)
+                       (map (lambda (x) (make-primitive-procedure (cadr x)))
+                            primitive-procedures)))))))
 
 (define the-global-environment (make-the-global-environment))
 
@@ -110,7 +110,7 @@
                               (first-val-in-frame frame))
                              (else (lookup var (make-frame (rest-vars-in-frame frame)
                                                            (rest-vals-in-frame frame))))))))
-      (lookup var (car the-global-environment)))))
+      (lookup var (unbox (car the-global-environment))))))
 
 
 ;;;;;;;;;;;;; Mutation:
@@ -120,8 +120,8 @@
     (let ((var (binding-variable binding))
           (val (binding-value binding))
           (frame (car the-global-environment)))
-      (set-car! frame (cons var (car frame)))
-      (set-cdr! frame (cons val (cdr frame))))))
+      (set-box! frame (cons (cons var (car (unbox frame)))
+                            (cons val (cdr (unbox frame))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

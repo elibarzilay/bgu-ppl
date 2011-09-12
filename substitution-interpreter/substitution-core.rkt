@@ -194,10 +194,6 @@
             ))
     ))
 
-(define value?
-  (lambda (val) (or (evaluator-symbol? val) (evaluator-list? val)
-                    (primitive-procedure? val) (compound-procedure? val))))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;       SUBSTITUTE PROCEDURES       ;;;;;;;;;;;
