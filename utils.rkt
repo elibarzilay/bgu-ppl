@@ -1,3 +1,7 @@
+#lang racket
+
+(provide (all-defined-out))
+
 (define gensym
   ((lambda (counter prefix)
      (lambda ()

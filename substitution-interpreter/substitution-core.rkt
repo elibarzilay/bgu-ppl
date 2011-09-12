@@ -1,5 +1,7 @@
-(load "asp.rkt")
-(load "ge-adt.rkt")
+#lang racket
+
+(require "../asp.rkt" "ge-adt.rkt")
+(provide (all-defined-out))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;  SUBSTITUTION-EVALUATOR  ;;;;;;;;;;;;;;;

@@ -1,4 +1,7 @@
-(load "env-ds.rkt")
+#lang racket
+
+(require "env-ds.rkt")
+(provide (all-defined-out))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;  IMP-ENV-EVALUATOR  ;;;;;;;;;;;;;;;;;

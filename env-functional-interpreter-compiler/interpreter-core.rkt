@@ -1,6 +1,7 @@
-(load "asp.rkt")
-(load "env-ds.rkt")
-(load "utils.rkt")
+#lang racket
+
+(require "asp.rkt" "../env-ds.rkt" "../utils.rkt")
+(provide (all-defined-out))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;  FUNC-ENV-EVALUATOR  ;;;;;;;;;;;;;;;;;

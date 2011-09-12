@@ -1,4 +1,7 @@
-(load "substitution-core.rkt")
+#lang racket
+
+(require "substitution-core.rkt")
+(provide (all-defined-out))
 
 (define test
   (lambda (test-lst)

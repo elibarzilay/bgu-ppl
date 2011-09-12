@@ -1,4 +1,7 @@
-(load "analyzer-core.rkt")
+#lang racket
+
+(require "analyzer-core.rkt")
+(provide (all-defined-out))
 
 (define test
   (lambda (test-lst)

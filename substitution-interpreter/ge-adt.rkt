@@ -1,4 +1,8 @@
-(load "asp.rkt")
+#lang racket
+
+(require "../asp.rkt")
+(provide (all-defined-out))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Data structures:

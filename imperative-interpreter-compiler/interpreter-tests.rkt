@@ -1,4 +1,7 @@
-(load "interpreter-core.rkt")
+#lang racket
+
+(require "interpreter-core.rkt")
+(provide (all-defined-out))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;  TESTS  ;;;;;;;;;;;;;;;;;;;;;;;
