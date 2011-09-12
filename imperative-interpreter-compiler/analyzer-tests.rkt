@@ -1,7 +1,6 @@
 #lang racket
 
 (require "analyzer-core.rkt" "../asp.rkt")
-(provide (all-defined-out))
 
 (define test
   (lambda (test-lst)
