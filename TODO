@@ -1,25 +1,22 @@
-Convert all uses of `error' to have a proper symbol indicator
+* Convert all uses of `error' to have a proper symbol indicator
 
-`display', `newline', `write' etc -> `printf'
+* `display', `newline', `write' etc -> `printf'
   Specifically, some are used before showing errors, which might lead to
   confusing output since the display goes to stdout, and the error goes
   to stderr
 
-Turn the testing thing into a more useful test harness: for example,
-make it run all of the tests and report errors for all failures instead
-of aborting on the first error.  Potentially use one of the existing
-testing frameworks that we have in Racket.
+* Turn the testing thing into a more useful test harness: for example,
+  make it run all of the tests and report errors for all failures
+  instead of aborting on the first error.  Potentially use one of the
+  existing testing frameworks that we have in Racket.
 
-Convert the (define foo (lambda (...) ...))s
+* Convert the (define foo (lambda (...) ...))s
 
-use structs
+* use structs instead of abusing lists & sexprs
 
-Typo in error message:
-  (error "The variable ,var was not found in the frame" frame)
+* Mess: `lookup-variable-value' and `defined-in-env' mess: why return a
+  frame instead of the value??  (Also mess in using an empty env
+  essentially as a flag for raising an exception later.)
 
-Mess: `lookup-variable-value' and `defined-in-env' mess: why return a
-frame instead of the value??  (Also mess in using an empty env
-essentially as a flag for raising an exception later.)
-
-`get-sub-frame' in the imperative interpreter keeps building bogus
-frames that are boxes, but these boxes are not intended to be changed.
+* `get-sub-frame' in the imperative interpreter keeps building bogus
+  frames that are boxes, but these boxes are not intended to be changed.
