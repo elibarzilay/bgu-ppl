@@ -17,7 +17,7 @@
   (lambda (s) (car (get-content s))))
 
 
-;;; List:
+;; List:
 (define make-list
   (lambda (x) (attach-tag (list x) 'evaluator-list)))
 (define evaluator-list?
@@ -25,7 +25,7 @@
 (define list-content
   (lambda (s) (car (get-content s))))
 
-;;; Primitive procedure:
+;; Primitive procedure:
 (define make-primitive-procedure
   (lambda (proc)
     (attach-tag (list proc) 'primitive)))
@@ -38,7 +38,7 @@
   (lambda (proc)
     (tagged-list? proc 'primitive)))
 
-;;;; Closure:
+;; Closure:
 (define make-procedure
   (lambda (parameters body)
     (attach-tag (cons parameters body) 'procedure)))
@@ -55,7 +55,7 @@
   (lambda (p)
     (cdr (get-content p))))
 
-; An identification predicate for procedures -- closures and primitive:
+;; An identification predicate for procedures -- closures and primitive:
 (define evaluator-procedure?
   (lambda (p)
     (or (primitive-procedure? p) (compound-procedure? p))))
@@ -65,7 +65,7 @@
 ;;;;;  Global environment ADT implementation  ;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;;;;;;;;;; Construction;;;;;;;;;;;;;
+;;;;;;;;;;; Construction ;;;;;;;;;;;;;
 (define make-the-global-environment
   (lambda ()
     (let ((primitive-procedures
@@ -91,7 +91,7 @@
 (define the-global-environment (make-the-global-environment))
 
 
-;;;;;;;;;;; selection:
+;;;;;;;;;;; Selection:
 
 (define lookup-variable-value
   (lambda (var)

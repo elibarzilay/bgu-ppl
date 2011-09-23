@@ -11,7 +11,7 @@
     (apply-test-list derive-eval test-lst)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Primitive procedures tests
+;; Primitive procedures tests
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (primitive-tests)
@@ -30,7 +30,7 @@
     (test test-out)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Application and lambda tests
+;; Application and `lambda' tests
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (app-lambda-tests)
@@ -43,7 +43,7 @@
     (test test-out)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; begin tests
+;; `begin' tests
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (begin-tests)
@@ -53,7 +53,7 @@
     (test test-out)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Let tests
+;; `let' tests
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (let-tests)
@@ -66,7 +66,7 @@
     (test test-out)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; definition and function-definition tests
+;; definition and function-definition tests
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (definition-tests)
@@ -78,7 +78,7 @@
     (test test-out)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; If tests
+;; `if' tests
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (if-tests)
@@ -91,7 +91,7 @@
     (test test-out)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Cond tests
+;; `cond' tests
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (cond-tests)
@@ -103,7 +103,7 @@
     (test test-out)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Set! tests
+;; `set!' tests
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (set!-tests)
@@ -120,7 +120,7 @@
     (test test-out)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; y-combinator tests
+;; Y-combinator tests
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (y-comb-tests)
@@ -135,7 +135,7 @@
     (test test-out)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Invoking tests
+;; Invoking tests
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (primitive-tests)

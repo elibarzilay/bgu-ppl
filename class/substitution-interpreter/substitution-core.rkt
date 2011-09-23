@@ -12,11 +12,11 @@
     (applicative-eval (derive exp))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Main substitution-evaluation
+;; Main substitution-evaluation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; Type: <EXP> * ENV -> VAL (union of Number, Symbol, Boolean, Procedure, Pair, List)
-;;; Pre-conditions: The given expression is legal according to the concrete syntax, Inner 'define' expressions are not legal.
+;; Type: <EXP> * ENV -> VAL (union of Number, Symbol, Boolean, Procedure, Pair, List)
+;; Pre-conditions: The given expression is legal according to the concrete syntax, Inner 'define' expressions are not legal.
 (define applicative-eval
   (lambda (exp)
     (cond ((atomic? exp) (eval-atomic exp))
@@ -38,7 +38,7 @@
               (list-of-values (rest-operands exps))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Atomic
+;; Atomic
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define eval-atomic
@@ -48,7 +48,7 @@
         (lookup-variable-value exp))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Special form handling
+;; Special form handling
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define special-form?
@@ -95,19 +95,19 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Value identification and List handling
+;; Value identification and List handling
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define value?
   (lambda (val) (or (evaluator-symbol? val) (evaluator-list? val)
                     (primitive-procedure? val) (compound-procedure? val))))
 
-;(define list-form?
-;  (lambda (exp)
- ;   (if (list? exp)
- ;       (let ((tag (get-tag exp)))
- ;         (or (eq? tag 'cons) (eq? tag 'list) (eq? tag 'append)))
- ;       #f)))
+;; (define list-form?
+;;   (lambda (exp)
+;;     (if (list? exp)
+;;         (let ((tag (get-tag exp)))
+;;           (or (eq? tag 'cons) (eq? tag 'list) (eq? tag 'append)))
+;;         #f)))
 
 (define list-form?
   (lambda (exp)
@@ -122,7 +122,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Application handling
+;; Application handling
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define apply-procedure
@@ -139,8 +139,8 @@
             "Unknown procedure type -- APPLY" procedure)))))
 
 
-;;; Retrieved the primitive implementation, and apply to args.
-;;; For value args: Their content should be retrieved.
+;; Retrieved the primitive implementation, and apply to args.
+;; For value args: Their content should be retrieved.
 (define apply-primitive-procedure
   (lambda (proc args)
     (apply (primitive-implementation proc)
@@ -160,9 +160,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;       RENAMING PROCEDURE       ;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Signature: rename(exp)
-;;; Purpose: Consistently rename bound variables in 'exp'.
-;;; Type: [T -> T]
+
+;; Signature: rename(exp)
+;; Purpose: Consistently rename bound variables in 'exp'.
+;; Type: [T -> T]
 (define rename
   (letrec ((make-new-names
             (lambda (old-names)
@@ -195,14 +196,13 @@
 ;;;;;;;;;;;       SUBSTITUTE PROCEDURES       ;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; Signature: substitute(exp vars vals)
-;;; Purpose: Consistent replacement of all FREE occurrences of 'vars' in 'exp' by 'vals', respectively.
-;;; Type: [T*LIST(Symbol)*LIST -> T]
-;;; Pre-conditions: (1) substitute is not performed on 'define' or 'let' expressions
-;;;                     or on expression containing such sub-expressions.
-;;;                 (2) 'exp' is already renamed. Therefore, var has no bound occurrences in exp.
-;;;                 (3) length(vars)=length(vals)
-;;;
+;; Signature: substitute(exp vars vals)
+;; Purpose: Consistent replacement of all FREE occurrences of 'vars' in 'exp' by 'vals', respectively.
+;; Type: [T*LIST(Symbol)*LIST -> T]
+;; Pre-conditions: (1) substitute is not performed on 'define' or 'let' expressions
+;;                     or on expression containing such sub-expressions.
+;;                 (2) 'exp' is already renamed. Therefore, var has no bound occurrences in exp.
+;;                 (3) length(vars)=length(vals)
 (define substitute
   (letrec ((substitute-var-val  ; Substitute one variable
             (lambda (exp var val)

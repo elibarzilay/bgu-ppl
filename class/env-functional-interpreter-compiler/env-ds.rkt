@@ -8,59 +8,60 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Procedure representation
+;; Procedure representation
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;Type: [T -> PAIR(Symbol,T)]
+;; Type: [T -> PAIR(Symbol,T)]
 (define make-primitive-procedure
   (lambda (proc)
     (attach-tag (list proc) 'primitive)))
 
-;Type: [T -> Boolean]
+;; Type: [T -> Boolean]
 (define primitive-procedure?
   (lambda (proc)
     (tagged-list? proc 'primitive)))
 
-;Type: [PAIR(Symbol,T) -> T]
+;; Type: [PAIR(Symbol,T) -> T]
 (define primitive-implementation
   (lambda (proc)
     (car (get-content proc))))
 
-;Type: [LIST(Symbol)*LIST*Env -> LIST]
+;; Type: [LIST(Symbol)*LIST*Env -> LIST]
 (define make-procedure
   (lambda (parameters body env)
     (attach-tag (list parameters body env) 'procedure)))
 
-;Type: [T -> Boolean]
+;; Type: [T -> Boolean]
 (define compound-procedure?
   (lambda (p)
     (tagged-list? p 'procedure)))
 
-;Type: [LIST -> LIST(Symbol)]
+;; Type: [LIST -> LIST(Symbol)]
 (define procedure-parameters
   (lambda (p)
     (car (get-content p))))
 
-;Type: [LIST -> LIST]
+;; Type: [LIST -> LIST]
 (define procedure-body
   (lambda (p)
     (cadr (get-content p))))
 
-;Type: [LIST -> Env]
+;; Type: [LIST -> Env]
 (define procedure-environment
   (lambda (p)
     (caddr (get-content p))))
 
-;Type: [LIST -> LIST]
+;; Type: [LIST -> LIST]
 ;Purpose:  An identification predicate for procedures -- closures and primitive:
 (define procedure?
   (lambda (p)
     (or (primitive-procedure? p) (compound-procedure? p))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Frames
+;; Frames
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Post-conditions: produces a pair of <variables,values> or error if (#vars != #vals)
+;; Post-conditions: produces a pair of <variables,values> or error if (#vars != #vals)
 (define (make-frame variables values)
   (box (if (null? variables)
            (list)
@@ -90,7 +91,7 @@
                                                               (rest-vals-in-frame frame))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Bindings
+;; Bindings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (make-binding var val)
@@ -103,7 +104,7 @@
   (cdr binding))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Environment
+;; Environment
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (enclosing-env env) (cdr env))
@@ -115,7 +116,7 @@
 (define (extend-env frame base-env)
   (cons frame base-env))
 
-; TYPE: var*env->frame
+;; TYPE: var*env->frame
 (define (defined-in-env var env)
   (if (empty-env? env)
       env
@@ -141,8 +142,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
-; The global environment
+;; The global environment
 ;;;;;;;;;;;;;;;;;;;;;;;;
+
 (define the-global-environment
   (let ((primitive-procedures
          (list (list 'car car)

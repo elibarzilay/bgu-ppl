@@ -12,11 +12,11 @@
     (env-eval (derive exp) the-global-environment)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Main functional-environment-evaluation
+;; Main functional-environment-evaluation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;; Type: <EXP> * ENV -> VAL (union of Number, Symbol, Boolean, Procedure, Pair, List)
-;;; Pre-conditions: The given expression is legal according to the concrete syntax, Inner 'define' expressions are not legal.
+;; Type: <EXP> * ENV -> VAL (union of Number, Symbol, Boolean, Procedure, Pair, List)
+;; Pre-conditions: The given expression is legal according to the concrete syntax, Inner 'define' expressions are not legal.
 (define env-eval
   (lambda (exp env)
     (cond ((atomic? exp) (eval-atomic exp env))
@@ -28,7 +28,7 @@
            (error "Unknown expression type -- EVAL" exp)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Atomic
+;; Atomic
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define eval-atomic
@@ -38,7 +38,7 @@
         (lookup-variable-value exp env))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Special form handling
+;; Special form handling
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define special-form?
@@ -87,7 +87,7 @@
                 (eval-sequence (sequence-rest-exps exps) env)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Application handling
+;; Application handling
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define apply-procedure
@@ -115,9 +115,9 @@
         (cons (env-eval (first-operand exps) env)
               (list-of-values (rest-operands exps) env)))))
 
-;;; The primitive procedures will be captured as data structures of
-;;; the evaluator. Therefore, their implementation should be
-;;; retrieved from these objects.
+;; The primitive procedures will be captured as data structures of the
+;; evaluator. Therefore, their implementation should be retrieved from
+;; these objects.
 (define apply-primitive-procedure
   (lambda (proc args)
     (apply (primitive-implementation proc) args)))

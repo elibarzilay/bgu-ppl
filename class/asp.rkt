@@ -3,36 +3,36 @@
 (require "utils.rkt")
 (provide (all-defined-out) (all-from-out "utils.rkt"))
 
-; Signature: attach-tag(x, tag)
-; Type: [LIST*Symbol -> LIST]
+;; Signature: attach-tag(x, tag)
+;; Type: [LIST*Symbol -> LIST]
 (define attach-tag
   (lambda (x tag) (cons tag x)))
 
-; Signature: get-tag(x)
-; Type: LIST -> Symbol
+;; Signature: get-tag(x)
+;; Type: LIST -> Symbol
 (define get-tag (lambda (x) (car x)))
 
-; Signature: get-content(x)
-; Type: [LIST -> T]
+;; Signature: get-content(x)
+;; Type: [LIST -> T]
 (define get-content
   (lambda (x) (cdr x)))
 
-; Signature: tagged-list?(x, tag)
-; Type: [T*Symbol -> Boolean]
+;; Signature: tagged-list?(x, tag)
+;; Type: [T*Symbol -> Boolean]
 (define tagged-list?
   (lambda (x tag)
     (and (list? x)
          (eq? (get-tag x) tag))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Booleans
+;; Booleans
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (define boolean?
   (lambda (exp)
     (or (eq? exp '#t) (eq? exp '#f))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Variable
+;; Variable
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define variable?
@@ -40,7 +40,7 @@
     (symbol? exp)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Atomic
+;; Atomic
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define atomic?
@@ -48,7 +48,8 @@
     (or (number? exp) (boolean? exp) (variable? exp) (null? exp))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; quote:
+;; quote
+
 (define quoted?
   (lambda (exp)
     (tagged-list? exp 'quote)))
@@ -61,7 +62,8 @@
     (attach-tag (list text) 'quote)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;lambda
+;; lambda
+
 (define lambda?
   (lambda (exp)
     (tagged-list? exp 'lambda)))
@@ -79,12 +81,12 @@
     (attach-tag (cons parameters body) 'lambda)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Case
+;; Case
 (define case?
   (lambda (exp)
     (tagged-list? exp 'case)))
 
-;;;A constructor for case
+;; A constructor for case
 (define make-case
   (lambda (control case-clauses)
     (cons 'case case-clauses)))
@@ -92,7 +94,7 @@
 (define case-control cadr)
 (define case-clauses cddr)
 
-;;; A constructor for case clauses:
+;; A constructor for case clauses:
 (define make-case-clause
   (lambda (compared actions)
     (cons compared actions)))
@@ -117,7 +119,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; definition
+;; definition
 (define definition?
   (lambda (exp)
     (tagged-list? exp 'define)))
@@ -136,8 +138,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Function definition like (define (foo x y z) ...)
-;;;
+;; Function definition like (define (foo x y z) ...)
 
 (define function-definition?
   (lambda (exp)
@@ -157,7 +158,8 @@
     (cdr (get-content exp))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; cond
+;; cond
+
 (define cond? (lambda (exp) (tagged-list? exp 'cond)))
 
 (define cond-clauses (lambda (exp) (cdr exp)))
@@ -171,18 +173,19 @@
 (define cond-else-clause?
   (lambda (clause) (eq? (cond-predicate clause) 'else)))
 
-;A constructor for cond clauses:
+;; A constructor for cond clauses:
 (define make-cond-clause
   (lambda (predicate exps) (cons predicate exps)))
 
-;A constructor for cond:
+;; A constructor for cond:
 (define make-cond
   (lambda (cond-clauses)
     (attach-tag cond-clauses 'cond)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; if
+;; if
+
 (define if?
   (lambda (exp) (tagged-list? exp 'if)))
 
@@ -209,7 +212,7 @@
     (attach-tag (list predicate consequent) 'if)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Assignment
+;; Assignment
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define assignment?
@@ -227,7 +230,8 @@
     (list 'set! variable value)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;let
+;; let
+
 (define let? (lambda (exp) (tagged-list? exp 'let)))
 
 (define let-bindings
@@ -249,7 +253,8 @@
     (attach-tag (cons bindings body) 'let)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; letrec
+;; letrec
+
 (define letrec?
   (lambda (exp) (tagged-list? exp 'letrec)))
 
@@ -276,8 +281,8 @@
   (lambda (binding) (cadr binding)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Application
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Application
+
 (define (application? exp) (list? exp))
 
 (define (make-application operator operands)
@@ -291,7 +296,8 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;; begin
+;; begin
+
 (define begin? (lambda (exp) (tagged-list? exp 'begin)))
 (define begin-actions (lambda (exp) (get-content exp)))
 (define make-begin (lambda (seq) (attach-tag seq 'begin)))
@@ -299,7 +305,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Sequence
+;; Sequence
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define (make-sequence exp1 exp2)
@@ -321,6 +327,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;  Derived expression handling  ;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (define derive
   (lambda (exp)
     (if (atomic? exp)
@@ -343,9 +350,8 @@
           (else "Unhandled derivision" exp))))
 
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Deriv handlers
+;; Deriv handlers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define cond->if
