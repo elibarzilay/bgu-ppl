@@ -407,5 +407,5 @@
                                                         (cdr vals)))))))
       (let* ((vars (letrec-variables exp))
              (vals (letrec-values exp))
-             (dummies (populate-list #t (length vals))))
+             (dummies (make-list (length vals) #t)))
         (make-application (make-lambda vars (make-body vars vals)) dummies)))))
