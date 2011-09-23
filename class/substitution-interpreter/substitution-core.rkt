@@ -27,8 +27,7 @@
            (let ((renamed-exp (rename exp)))
              (apply-procedure (applicative-eval (operator renamed-exp))
                               (list-of-values (operands renamed-exp)))))
-          (else
-           (error "Unknown expression type -- EVAL" exp)))))
+          (else (error 'eval "unknown expression type: ~s" exp)))))
 
 (define list-of-values
   (lambda (exps)
@@ -134,9 +133,7 @@
                  (parameters (procedure-parameters procedure)))
              (eval-sequence
               (substitute body parameters arguments))))
-          (else
-           (error
-            "Unknown procedure type -- APPLY" procedure)))))
+          (else (error 'apply "Unknown procedure type: ~s" procedure)))))
 
 
 ;; Retrieved the primitive implementation, and apply to args.

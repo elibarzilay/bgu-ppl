@@ -24,8 +24,7 @@
           ((application? exp)
            (apply-procedure (env-eval (operator exp) env)
                             (list-of-values (operands exp) env)))
-          (else
-           (error "Unknown expression type -- EVAL" exp)))))
+          (else (error 'eval "unknown expression type: ~s" exp)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Atomic
@@ -52,7 +51,7 @@
           ((lambda? exp) (eval-lambda exp env))
           ((definition? exp)
            (if (not (eq? env the-global-environment))
-               (error "Non global definition" exp)
+               (error 'eval "non global definition: ~s" exp)
                (eval-definition exp)))
           ((if? exp) (eval-if exp env))
           ((begin? exp) (eval-begin exp env))
@@ -102,11 +101,9 @@
                   (extend-env
                    (make-frame parameters arguments)
                    (procedure-environment procedure)))
-                 (error
-                  "make-frame-precondition violation: # of variables does not match # of values while attempting to create a frame"))))
-          (else
-           (error
-            "Unknown procedure type -- APPLY" procedure)))))
+                 (error 'make-frame-precondition
+                        "violation: # of variables does not match # of values while attempting to create a frame"))))
+          (else (error 'apply "unknown procedure type: ~s" procedure)))))
 
 (define list-of-values
   (lambda (exps env)

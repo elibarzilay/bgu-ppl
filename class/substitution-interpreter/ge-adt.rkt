@@ -105,7 +105,7 @@
              (lookup (lambda (var frame)
                        (cond ((or (null? (frame-variables frame))
                                   (null? (frame-values frame)))
-                              (error "unbound variable" var))
+                              (error 'lookup "unbound variable: ~s" var))
                              ((eq? var (first-var-in-frame frame))
                               (first-val-in-frame frame))
                              (else (lookup var (make-frame (rest-vars-in-frame frame)

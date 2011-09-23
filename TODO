@@ -1,10 +1,5 @@
 * Convert all uses of `error' to have a proper symbol indicator
 
-* `display', `newline', `write' etc -> `printf'
-  Specifically, some are used before showing errors, which might lead to
-  confusing output since the display goes to stdout, and the error goes
-  to stderr
-
 * Turn the testing thing into a more useful test harness: for example,
   make it run all of the tests and report errors for all failures
   instead of aborting on the first error.  Potentially use one of the

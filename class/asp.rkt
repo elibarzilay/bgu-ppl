@@ -370,7 +370,7 @@
                       (if (cond-else-clause? first)
                           (if (cond-empty-clauses? rest)
                               (sequence->exp (cond-actions first))
-                              (error "ELSE clause isn't last -- COND->IF"
+                              (error 'cond-if "ELSE clause isn't last: ~s"
                                      clauses))
                           (make-if (cond-predicate first)
                                    (sequence->exp (cond-actions first))

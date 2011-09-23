@@ -20,8 +20,7 @@
     (cond ((atomic? exp) (analyze-atomic exp))
           ((special-form? exp) (analyze-special-form exp))
           ((application? exp) (analyze-application exp))
-          (else
-           (error "Unknown expression type -- EVAL" exp))))
+          (else (error 'eval "unknown expression type: ~s" exp))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Atomic
@@ -72,7 +71,7 @@
         (val (analyze (definition-value exp))))
     (lambda (env)
       (if (not (eq? env the-global-environment))
-          (error "Non global definition" exp)
+          (error 'eval "non global definition: ~s" exp)
           (begin (add-binding! (make-binding var (val the-global-environment)))
                  'ok)))))
 
@@ -94,7 +93,7 @@
   (let ((procs (map analyze exps))
         (last-in-list (lambda (lst) (car (reverse lst)))))
     (if (null? procs)
-        (error "Empty sequence -- ANALYZE")
+        (error 'analyze "empty sequence")
         (lambda (env)
           (let ((vals (map (lambda (proc) (proc env)) procs)))
             (last-in-list vals))))))
@@ -119,11 +118,9 @@
                ((procedure-body procedure)
                 (extend-env (make-frame parameters (map box arguments))
                             (procedure-environment procedure)))
-               (error
-                "make-frame-precondition violation: # of variables does not match # of values while attempting to create a frame"))))
-        (else
-         (error
-          "Unknown procedure type -- APPLY" procedure))))
+               (error 'make-frame-precondition
+                      "violation: # of variables does not match # of values while attempting to create a frame"))))
+        (else (error 'apply "unknown procedure type: ~s" procedure))))
 
 ;; The primitive procedures will be captured as data structures of the
 ;; evaluator. Therefore, their implementation should be retrieved from

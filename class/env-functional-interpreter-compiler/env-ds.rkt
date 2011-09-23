@@ -128,10 +128,7 @@
 (define (lookup-variable-value var env)
   (let ((f (defined-in-env var env)))
     (if (empty-frame? f)
-        (begin
-          (display var) (newline)
-          (display env) (newline)
-          (error "Variable not found -- LOOKUP"))
+        (error 'lookup "variable not found: ~s\n  env = ~s" var env)
         (first-val-in-frame f))))
 
 (define (add-binding! binding)
