@@ -148,7 +148,7 @@
      (quasisyntax/loc stx
        (parameterize ([current-input-port (open-input-string inp)])
          (test x xs ...)))]
-    [(_ expr1 =output> out)
+    [(_ expr =output> out)
      (quasisyntax/loc stx
        (test-o 'expr (lambda () expr) out '#,loc))]
     [(_ expr1 => expr2 =output> out)
