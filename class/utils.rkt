@@ -207,7 +207,11 @@
 (define (test-o expr thunk expected loc)
   (in-test-context! loc)
   ;; ignore whitespace sequences
-  (define (clean str) (regexp-replace* #px"[[:space:]]+" str " "))
+  (define (clean str)
+    (let* ([str (regexp-replace* #px"[[:space:]]+" str " ")]
+           [str (regexp-replace #rx"^ " str "")]
+           [str (regexp-replace #rx" $" str "")])
+      str))
   (define outp (open-output-string))
   (parameterize ([current-output-port outp]) (thunk))
   (define output (get-output-string outp))
