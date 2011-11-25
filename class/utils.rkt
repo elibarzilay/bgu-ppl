@@ -72,6 +72,9 @@
 ;; * (test <expr> =output> "text")
 ;;     tests that the generated output is the given text (not a pattern, but
 ;;     ignores most differences in whitespaces)
+;; * (test <expr> =output> "text" "more text")
+;;     same, but allows splitting the output into multiple strings for
+;;     convenience
 ;; * (test <expr> => <result> =output> "text")
 ;;     combines checking the result and the output
 ;; These tests must be run inside a `run-tests' expression, and at the end of
@@ -130,14 +133,7 @@
 (provide test)
 ;; parse all possible test combinations, not pretty, but the goal is student
 ;; code, not super-generic
-(define-syntax (test stx)
-  (define context (syntax-local-context))
-  ;; (unless (memq context '(module top-level))
-  ;;   (raise-syntax-error 'test "can only be used as a top-level expression"
-  ;;                       stx))
-  (define loc (list (eq? 'top-level context)
-                    (syntax-source stx) (syntax-line stx) (syntax-column stx)
-                    (syntax-position stx) (syntax-span stx)))
+(define-for-syntax (test-gen stx loc)
   (syntax-case* stx (=> =error> =output> input:)
                 (lambda (x y) (eq? (syntax-e x) (syntax-e y)))
     [(_ expr)
@@ -147,7 +143,7 @@
     [(_ input: inp x xs ...)
      (quasisyntax/loc stx
        (parameterize ([current-input-port (open-input-string inp)])
-         (test x xs ...)))]
+         #,(test-gen #'(test x xs ...) loc)))]
     [(_ expr =output> out)
      (quasisyntax/loc stx
        (test-o 'expr (lambda () expr) out '#,loc))]
@@ -156,12 +152,21 @@
        (test-o 'expr1 (lambda () (test-2 expr1 'expr1 expr2 'expr2 '#,loc))
                out '#,loc))]
     [(_ expr1 =output> out => expr2)
-     (quasisyntax/loc stx
-       (test expr1 =output> out => expr2))]
+     (test-gen #'(test expr1 =output> out => expr2) loc)]
+    [(_ expr1 =output> out1 out2 xs ...)
+     (test-gen #'(test expr1 =output> (string-append out1 out2) xs ...) loc)]
     [(_ expr =error> msg-re)
      (quasisyntax/loc stx
-       (test-e (lambda () ((test-postprocess) expr)) 'expr msg-re
-               '#,loc))]))
+       (test-e (lambda () expr) 'expr msg-re '#,loc))]))
+(define-syntax (test stx)
+  (define context (syntax-local-context))
+  ;; (unless (memq context '(module top-level))
+  ;;   (raise-syntax-error 'test "can only be used as a top-level expression"
+  ;;                       stx))
+  (define loc (list (eq? 'top-level context)
+                    (syntax-source stx) (syntax-line stx) (syntax-column stx)
+                    (syntax-position stx) (syntax-span stx)))
+  (test-gen stx loc))
 
 (define (test-error loc fmt . args)
   (let ([s (tests-state)]
